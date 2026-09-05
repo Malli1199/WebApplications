@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chronicles of Bharat: The Heritage Quest</title>
+<style>
+:root{
+  --maroon:#651c2a;--maroon2:#8b3043;--gold:#c49a3a;--gold2:#e3c676;
+  --paper:#fff7df;--parchment:#f3dfb4;--ink:#31251f;--green:#376646;
+  --shadow:0 12px 30px rgba(61,31,18,.18)
+}
+*{box-sizing:border-box}
+body{margin:0;color:var(--ink);font-family:Georgia,"Times New Roman",serif;
+background:radial-gradient(circle at top,#fff8e5,#f0dcae 58%,#e5c990);min-height:100vh}
+button,input{font:inherit}button{cursor:pointer}
+.hidden{display:none!important}
+#loginScreen{min-height:100vh;display:grid;place-items:center;padding:22px;
+background:linear-gradient(135deg,rgba(84,23,34,.97),rgba(67,30,23,.94))}
+.login-card{width:min(680px,95vw);text-align:center;background:rgba(255,247,223,.98);
+padding:clamp(28px,6vw,60px);border:5px double var(--gold);border-radius:22px;box-shadow:0 25px 70px rgba(0,0,0,.3)}
+.logo{width:78px;height:78px;margin:auto;border-radius:50%;display:grid;place-items:center;
+background:var(--maroon);color:var(--gold2);border:3px solid var(--gold);font-size:35px}
+.login-card h1{font-size:clamp(2rem,6vw,3.5rem);color:var(--maroon);margin:12px 0 4px}
+.login-card p{line-height:1.6}
+.input{width:100%;padding:14px 16px;border:2px solid #ba985c;border-radius:11px;background:#fffdf5;margin:12px 0}
+.btn{border:0;border-radius:10px;padding:11px 16px;background:var(--maroon);color:white;font-weight:700;box-shadow:0 6px 14px rgba(85,24,35,.2)}
+.btn:hover{background:var(--maroon2)}
+.btn.gold{background:#9c751f}.btn.light{background:#fff8e8;color:var(--maroon);border:2px solid var(--gold);box-shadow:none}
+.btn.green{background:var(--green)}.btn.danger{background:#8c3030}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(76,23,31,.98);color:#fff8ea;border-bottom:3px solid var(--gold)}
+.topbar-inner{max-width:1450px;margin:auto;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.brand{font-weight:700;min-width:210px}.brand small{display:block;color:#efcf76;font-weight:400}
+.nav{display:flex;gap:5px;overflow:auto;flex:1}.nav button{background:transparent;border:1px solid transparent;color:white;padding:8px 10px;border-radius:8px;white-space:nowrap}
+.nav button.active,.nav button:hover{background:rgba(228,200,119,.18);border-color:rgba(228,200,119,.5)}
+.header-actions{display:flex;gap:6px;align-items:center}.icon{border:1px solid #d5b76b;background:#7e2636;color:white;padding:8px 10px;border-radius:8px}
+main{max-width:1450px;margin:auto;padding:18px 14px 45px}.screen{display:none}.screen.active{display:block}
+.hero,.card{background:rgba(255,249,231,.97);border:2px solid #d1ad58;border-radius:18px;box-shadow:var(--shadow)}
+.hero{padding:clamp(22px,4vw,45px)}.hero h2{color:var(--maroon);font-size:clamp(2rem,5vw,3.7rem);margin:8px 0}.hero p{line-height:1.7;max-width:900px}
+.card{padding:18px}.eyebrow{text-transform:uppercase;letter-spacing:.13em;color:var(--maroon);font-weight:700;font-size:.8rem}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.stat{padding:15px;border:2px solid #d6b866;background:#fff9e8;border-radius:12px}.stat strong{display:block;font-size:1.65rem;color:var(--maroon);margin-top:3px}
+.grid{display:grid;gap:14px}.grid3{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:repeat(2,1fr)}
+.section-title{color:var(--maroon);margin:28px 0 14px}.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.space{justify-content:space-between}
+.pill{display:inline-block;background:#efe0b3;color:var(--maroon);padding:5px 9px;border-radius:999px;font-weight:700}
+.notice{background:#fff7df;border-left:5px solid var(--gold);border-radius:8px;padding:12px 14px;line-height:1.55}
+.map-wrap{margin-top:16px}.map-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:15px}
+.map-region{padding:10px 8px;background:#fff8e8;border:2px solid #d1ad5a;border-radius:10px;text-align:center;color:var(--maroon);font-weight:700}
+.map-region:hover{transform:translateY(-2px);background:#f5e6bb}
+.india-map{position:relative;min-height:520px;display:grid;place-items:center;overflow:hidden;
+background:linear-gradient(#efe0b4,#f8eccf);border:3px double var(--gold);border-radius:18px}
+.india-outline{width:min(520px,75vw);height:470px;filter:drop-shadow(0 10px 12px rgba(65,34,20,.2))}
+.marker{position:absolute;width:18px;height:18px;border-radius:50%;background:var(--maroon);border:3px solid #f9e3a1;box-shadow:0 0 0 2px var(--gold);cursor:pointer;transition:.15s}
+.marker:hover{transform:scale(1.35)}
+.marker span{position:absolute;left:12px;top:10px;white-space:nowrap;background:#fff8e8;border:1px solid #d0ad5e;color:var(--maroon);padding:4px 7px;border-radius:6px;font-size:.68rem;pointer-events:none}
+.city-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:15px}
+.city-card{padding:16px;background:#fff8e8;border:2px solid #d0ad5e;border-radius:14px;cursor:pointer}
+.city-card:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.city-card h3{color:var(--maroon);margin:7px 0}
+.city-card p{line-height:1.5;margin:5px 0}
+.photo{width:100%;max-height:430px;object-fit:cover;border-radius:14px;border:4px solid var(--gold);background:#e9d6a7}
+.detail-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:15px}
+.story{line-height:1.75}.story h3{color:var(--maroon)}
+.lang-tabs{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}
+.jigsaw{display:grid;grid-template-columns:repeat(4,1fr);width:min(100%,450px);aspect-ratio:1;margin:14px auto;border:4px solid var(--maroon);background:#e4cd99}
+.piece{border:1px solid rgba(92,27,40,.55);background-repeat:no-repeat;background-size:400% 400%;cursor:grab;position:relative}
+.piece.correct{box-shadow:inset 0 0 0 3px #4f7d45}.piece:after{content:attr(data-n);position:absolute;right:4px;bottom:4px;background:rgba(255,248,227,.8);padding:2px 4px;border-radius:4px;color:var(--maroon);font:700 11px Arial}
+.quiz-card{max-width:950px;margin:auto}.progress{height:12px;border-radius:999px;background:#e6d5aa;overflow:hidden}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--maroon),var(--gold));width:0}
+.option{display:block;width:100%;text-align:left;padding:14px;margin:10px 0;border:2px solid #d0ae61;background:#fffaf0;border-radius:10px}
+.option.correct{background:#dfeeda;border-color:#5c824f}.option.wrong{background:#f2d4d4;border-color:#9b4242}.option:disabled{cursor:not-allowed}
+.memory{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:850px;margin:18px auto}.mem{aspect-ratio:1;border:0;background:transparent;perspective:600px}.mem-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:.45s}.mem.flipped .mem-inner,.mem.matched .mem-inner{transform:rotateY(180deg)}.face{position:absolute;inset:0;display:grid;place-items:center;backface-visibility:hidden;border:3px solid var(--gold);border-radius:13px}.front{background:var(--maroon);color:var(--gold2);font-size:2rem}.back{transform:rotateY(180deg);background:#fff8e8;text-align:center;font-size:1.4rem}
+.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:700px}.table th,.table td{padding:10px;border-bottom:1px solid #ddc68f;text-align:center}.table th{background:var(--maroon);color:white}.footer{text-align:center;padding:24px;color:#6f584a}
+.modal{position:fixed;inset:0;background:rgba(20,10,7,.65);display:grid;place-items:center;padding:14px;z-index:100}.modal>div{max-width:760px;max-height:88vh;overflow:auto;background:#fff8e8;padding:22px;border:4px double var(--gold);border-radius:16px}
+@media(max-width:950px){.detail-grid,.grid3,.city-grid{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.map-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:650px){.topbar-inner{align-items:flex-start}.brand{width:100%}.nav{width:100%;order:3}.header-actions{width:100%;justify-content:space-between}.detail-grid,.grid3,.grid2,.city-grid{grid-template-columns:1fr}.map-grid{grid-template-columns:repeat(2,1fr)}.india-map{min-height:430px}.india-outline{height:390px}.memory{grid-template-columns:repeat(4,1fr);gap:6px}}
+</style>
+</head>
+<body>
+
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="logo">ॐ</div>
+    <div class="eyebrow">Interactive Indian Heritage Adventure</div>
+    <h1>Chronicles of Bharat</h1>
+    <h2 style="color:var(--maroon);margin:0">The Heritage Quest</h2>
+    <p>Enter your participant name to begin your journey through Indian history and culture.</p>
+    <input id="loginName" class="input" maxlength="40" autocomplete="off" placeholder="Enter Participant Name">
+    <button id="loginEnter" class="btn" style="width:100%;font-size:1.05rem">Enter Quest ✦</button>
+    <p style="font-size:.9rem;opacity:.75">Your scores and progress are saved in this browser.</p>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+<header class="topbar"><div class="topbar-inner">
+  <div class="brand">Chronicles of Bharat<small>The Heritage Quest</small></div>
+  <nav class="nav" id="nav">
+    <button data-screen="home" class="active">Home</button>
+    <button data-screen="explore">India Map</button>
+    <button data-screen="city">Selected Place</button>
+    <button data-screen="game">Heritage Game</button>
+    <button data-screen="marks">Participant Marks</button>
+    <button data-screen="leaderboard">Leaderboard</button>
+  </nav>
+  <div class="header-actions">
+    <button id="langBtn" class="icon">తెలుగు</button>
+    <button id="musicBtn" class="icon">▶ Music</button>
+    <input id="volume" type="range" min="0" max="1" step=".01" value=".25" title="Volume">
+    <button id="logoutBtn" class="icon">Logout</button>
+  </div>
+</div></header>
+
+<main>
+
+<section id="home" class="screen active">
+  <div class="hero">
+    <div class="eyebrow" id="homeEyebrow">Participant Dashboard</div>
+    <h2 id="welcome">Welcome!</h2>
+    <p>Select a State or Union Territory on the India Map. Then choose a city/place to unlock only that place's learning story, real photograph, 4×4 puzzle and 10-question quiz.</p>
+    <div class="stats">
+      <div class="stat">Quiz Marks<strong id="dashQuiz">0/20</strong></div>
+      <div class="stat">Puzzle Marks<strong id="dashPuzzle">0/20</strong></div>
+      <div class="stat">Heritage Game<strong id="dashGame">0/10</strong></div>
+      <div class="stat">Total Marks<strong id="dashTotal">0/50</strong></div>
+    </div>
+    <div class="row space">
+      <div><span class="pill">XP <span id="dashXP">0</span></span> <span class="pill">Rank <span id="dashRank">—</span></span></div>
+      <button class="btn gold" data-go="explore">Start with India Map →</button>
+    </div>
+  </div>
+  <h2 class="section-title">How the Quest Works</h2>
+  <div class="grid grid3">
+    <div class="card"><h3>1. Select State / UT</h3><p>Use the interactive India map or the state/UT buttons.</p></div>
+    <div class="card"><h3>2. Select City / Place</h3><p>Only cities belonging to your selected State or UT are shown.</p></div>
+    <div class="card"><h3>3. Learn & Play</h3><p>Read the selected place's history and culture, view its real photo, solve its 4×4 puzzle and take its 10-question quiz.</p></div>
+  </div>
+</section>
+
+<section id="explore" class="screen">
+  <div class="hero">
+    <div class="eyebrow">Step 1</div>
+    <h2>Explore India</h2>
+    <p>Click a State or Union Territory on the map. You can also use the accessible list below the map.</p>
+  </div>
+  <div class="map-wrap card">
+    <div class="india-map" id="indiaMap">
+      <svg class="india-outline" viewBox="0 0 420 470" aria-label="Stylized India map">
+        <path d="M92 35 L158 18 L207 34 L245 22 L306 55 L343 104 L325 150 L346 191 L326 228 L345 274 L311 319 L280 355 L262 411 L229 448 L210 420 L182 396 L155 371 L130 337 L101 316 L76 279 L61 233 L38 193 L59 157 L44 120 L67 91 Z"
+              fill="#d4b064" stroke="#651c2a" stroke-width="5"/>
+        <path d="M88 312 L111 333 L132 362 L155 380" fill="none" stroke="#8b3043" stroke-width="4"/>
+        <path d="M203 420 L185 452 L162 462" fill="none" stroke="#8b3043" stroke-width="4"/>
+        <path d="M326 229 L363 248 L379 282" fill="none" stroke="#8b3043" stroke-width="4"/>
+        <text x="210" y="245" text-anchor="middle" fill="#651c2a" font-size="32" font-weight="700">BHARAT</text>
+        <text x="210" y="272" text-anchor="middle" fill="#651c2a" font-size="14">Interactive Heritage Map</text>
+      </svg>
+    </div>
+    <div id="regionList" class="map-grid"></div>
+  </div>
+  <div id="cityChooser" class="card hidden" style="margin-top:16px">
+    <div class="row space"><div><div class="eyebrow">Step 2</div><h2 id="stateTitle" style="color:var(--maroon);margin:5px 0"></h2></div><button id="backMap" class="btn light">Choose Another State</button></div>
+    <p id="stateHint"></p>
+    <div id="cityGrid" class="city-grid"></div>
+  </div>
+</section>
+
+<section id="city" class="screen">
+  <div class="hero">
+    <div class="row space">
+      <div><div class="eyebrow">Selected Heritage Place</div><h2 id="cityTitle">Choose a place from the India Map</h2><p id="citySubtitle">Your selected city's content will appear here.</p></div>
+      <button class="btn light" data-go="explore">← India Map</button>
+    </div>
+  </div>
+  <div id="cityContent" class="hidden" style="margin-top:16px">
+    <div class="card">
+      <div class="lang-tabs">
+        <button class="btn light langChoice" data-lang="en">English</button>
+        <button class="btn light langChoice" data-lang="te">తెలుగు</button>
+        <button class="btn light langChoice" data-lang="hi">हिन्दी</button>
+      </div>
+      <img id="placePhoto" class="photo" alt="Real-world photograph of selected heritage place">
+      <p id="photoCaption" class="notice" style="margin-top:10px">Real-world photograph loaded from Wikimedia when available.</p>
+    </div>
+
+    <div class="detail-grid" style="margin-top:16px">
+      <div class="card story"><h3 id="historyTitle">History</h3><div id="historyText"></div></div>
+      <div class="card story"><h3 id="cultureTitle">Culture</h3><div id="cultureText"></div></div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <div class="row space"><div><h2 style="color:var(--maroon);margin:0">4×4 Heritage Picture Puzzle</h2><p style="margin-bottom:0">First view the real photograph above. Then drag one piece onto another to rebuild the same picture.</p></div><span class="pill">Puzzle Marks: <span id="puzzleStatus">0/20</span></span></div>
+      <div id="puzzleArea"></div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <div class="row space"><div><h2 style="color:var(--maroon);margin:0">10-Question City Quiz</h2><p style="margin-bottom:0">Exactly 10 questions • 2 marks each • Maximum 20 marks</p></div><button id="startQuiz" class="btn gold">Start / Restart Quiz</button></div>
+      <div id="quizArea" style="margin-top:15px"></div>
+    </div>
+  </div>
+</section>
+
+<section id="game" class="screen">
+  <div class="hero"><div class="eyebrow">Heritage Memory Game</div><h2>Heritage Memory Quest</h2><p>There are 8 matching pairs. Complete all pairs to earn up to <strong>10 Heritage Game Marks</strong>.</p>
+    <div class="stats">
+      <div class="stat">Matches<strong id="matchCount">0/8</strong></div>
+      <div class="stat">Attempts<strong id="attempts">0</strong></div>
+      <div class="stat">Heritage Marks<strong id="gameMarks">0/10</strong></div>
+      <div class="stat">XP<strong id="gameXP">0</strong></div>
+    </div>
+  </div>
+  <div class="row space" style="margin:16px 0"><div class="notice">Complete all 8 pairs. The game score is recorded as 10 marks when completed.</div><button id="restartMemory" class="btn gold">Restart Game</button></div>
+  <div id="memoryBoard" class="memory"></div>
+</section>
+
+<section id="marks" class="screen">
+  <div class="hero"><div class="eyebrow">Results</div><h2>Participant Marks</h2><p>Maximum total is 50: Quiz 20 + Puzzle 20 + Heritage Game 10.</p></div>
+  <div class="card" style="margin-top:16px">
+    <div class="row space"><input id="marksSearch" class="input" style="max-width:450px" placeholder="Search participant..."><button id="resetMarks" class="btn danger">Reset All Marks</button></div>
+  </div>
+  <div class="table-wrap card" style="margin-top:16px;padding:0"><table class="table"><thead><tr><th>Name</th><th>Quiz /20</th><th>Puzzle /20</th><th>Game /10</th><th>Total /50</th></tr></thead><tbody id="marksBody"></tbody></table></div>
+</section>
+
+<section id="leaderboard" class="screen">
+  <div class="hero"><div class="eyebrow">Compete & Learn</div><h2>Leaderboard</h2><p>Rankings use the combined marks out of 50.</p></div>
+  <div id="leaderboardBody" class="table-wrap card" style="margin-top:16px;padding:0"></div>
+</section>
+
+</main>
+<footer class="footer">✦ Chronicles of Bharat: The Heritage Quest ✦<br><small>Educational game • Progress stored locally in your browser</small></footer>
+</div>
+
+<div id="toast" class="hidden" style="position:fixed;right:16px;bottom:16px;z-index:200;background:var(--maroon);color:white;padding:12px 16px;border-radius:10px"></div>
+
+<script>
+'use strict';
+
+const STORE='bharatQuestMapV1';
+const defaultState={currentName:'',participants:{}};
+let appState=loadState(), selectedState=null, selectedCity=null, lang='en';
+let quizState={index:0,score:0,answered:false,active:false,answers:[]};
+let puzzleRun={order:[],moves:0};
+let memoryState={cards:[],first:null,second:null,lock:false,matches:0,attempts:0};
+
+function loadState(){try{const r=localStorage.getItem(STORE);return r?Object.assign({},defaultState,JSON.parse(r)):structuredClone(defaultState)}catch(e){return structuredClone(defaultState)}}
+function saveState(){try{localStorage.setItem(STORE,JSON.stringify(appState))}catch(e){}}
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function slug(s){return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,50)||'participant'}
+function normName(s){return String(s||'').trim().replace(/\s+/g,' ').slice(0,40)}
+function ensureParticipant(name){const n=normName(name),k=slug(n);if(!appState.participants[k])appState.participants[k]={name:n,quizMarks:0,puzzleMarks:0,heritageGameMarks:0,totalMarks:0,xp:0,puzzleDone:{},quizHistory:{},gameCompleted:false};return k}
+function current(){return appState.currentName?appState.participants[slug(appState.currentName)]:null}
+function recalc(p){p.quizMarks=Math.min(20,Math.max(0,Number(p.quizMarks)||0));p.puzzleMarks=Math.min(20,Math.max(0,Number(p.puzzleMarks)||0));p.heritageGameMarks=Math.min(10,Math.max(0,Number(p.heritageGameMarks)||0));p.totalMarks=p.quizMarks+p.puzzleMarks+p.heritageGameMarks}
+function allParticipants(){const a=Object.values(appState.participants);a.forEach(recalc);return a.sort((x,y)=>y.totalMarks-x.totalMarks||x.name.localeCompare(y.name))}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),2600)}
+
+const L={
+en:{home:'Home',explore:'India Map',city:'Selected Place',game:'Heritage Game',marks:'Participant Marks',leaderboard:'Leaderboard',
+history:'History',culture:'Culture',choose:'Choose a State or Union Territory',cities:'Cities / Places in',selectCity:'Select a city or place to continue'},
+te:{home:'హోమ్',explore:'భారత మ్యాప్',city:'ఎంచుకున్న ప్రదేశం',game:'హెరిటేజ్ గేమ్',marks:'పాల్గొనేవారి మార్కులు',leaderboard:'లీడర్‌బోర్డ్',
+history:'చరిత్ర',culture:'సంస్కృతి',choose:'రాష్ట్రం లేదా కేంద్ర పాలిత ప్రాంతాన్ని ఎంచుకోండి',cities:'ఇందులోని నగరాలు / ప్రదేశాలు',selectCity:'కొనసాగించడానికి నగరం లేదా ప్రదేశాన్ని ఎంచుకోండి'},
+hi:{home:'होम',explore:'भारत का नक्शा',city:'चयनित स्थान',game:'हेरिटेज गेम',marks:'प्रतिभागी अंक',leaderboard:'लीडरबोर्ड',
+history:'इतिहास',culture:'संस्कृति',choose:'राज्य या केंद्र शासित प्रदेश चुनें',cities:'इसमें शहर / स्थान',selectCity:'जारी रखने के लिए शहर या स्थान चुनें'}
+};
+
+function nm(en,te,hi){return {en,te,hi}}
+
+const rawRegions=[
+['AP','state',nm('Andhra Pradesh','ఆంధ్రప్రదేశ్','आंध्र प्रदेश'),25,74,[
+ {id:'amaravati',name:nm('Amaravati','అమరావతి','अमरावती'),place:nm('Amaravati Buddhist Heritage','అమరావతి బౌద్ధ వారసత్వం','अमरावती बौद्ध विरासत'),wiki:'Amaravati, Andhra Pradesh',history:nm('Amaravati grew as an important ancient settlement on the Krishna River and is associated with the great Amaravati Buddhist stupa and sculptural tradition. The site preserves evidence of artistic, religious and trading activity in the region.','అమరావతి కృష్ణా నది తీరంలోని పురాతన ముఖ్యమైన నివాసంగా అభివృద్ధి చెందింది. అమరావతి మహాస్తూపం, శిల్ప సంప్రదాయం ఈ ప్రాంతపు బౌద్ధ, కళా, వాణిజ్య చరిత్రకు సాక్ష్యాలు.','अमरावती कृष्णा नदी के किनारे विकसित एक प्राचीन महत्वपूर्ण केंद्र था। अमरावती बौद्ध स्तूप और इसकी मूर्तिकला परंपरा क्षेत्र की धार्मिक, कलात्मक और व्यापारिक विरासत को दर्शाती है।'),cultureText:nm('Amaravati is known for Buddhist art, riverine landscapes and Andhra cultural traditions. Local heritage combines archaeology, classical and folk arts, Telugu literature, food traditions and festive customs.','అమరావతి బౌద్ధ కళ, కృష్ణా నది పరిసరాలు మరియు ఆంధ్ర సాంస్కృతిక సంప్రదాయాలకు ప్రసిద్ధి. పురావస్తు వారసత్వంతో పాటు తెలుగు సాహిత్యం, కళలు, ఆహారం, పండుగలు ఇక్కడి సంస్కృతిలో భాగం.','अमरावती बौद्ध कला, कृष्णा नदी के परिदृश्य और आंध्र की सांस्कृतिक परंपराओं के लिए जाना जाता है। पुरातत्व के साथ तेलुगु साहित्य, कला, भोजन और त्योहार इसकी संस्कृति का हिस्सा हैं।')},
+ {id:'vijayawada',name:nm('Vijayawada','విజయవాడ','विजयवाड़ा'),place:nm('Kanaka Durga and Krishna River Heritage','కనకదుర్గ–కృష్ణా నది వారసత్వం','कनक दुर्गा और कृष्णा नदी विरासत'),wiki:'Vijayawada',history:nm('Vijayawada stands on the Krishna River and has long been a regional center of pilgrimage, trade and transport. The Kanaka Durga Temple on Indrakeeladri hill is a major landmark, while the river and nearby historic sites connect the city with the wider history of coastal Andhra.','విజయవాడ కృష్ణా నది తీరాన ఉన్న ప్రముఖ యాత్రా, వాణిజ్య కేంద్రం. ఇంద్రకీలాద్రిపై కనకదుర్గ ఆలయం ప్రధాన చారిత్రక స్థలం. నది మరియు పరిసర ప్రాంతాలు కోస్తా ఆంధ్ర చరిత్రతో నగరాన్ని అనుసంధానిస్తాయి.','विजयवाड़ा कृष्णा नदी के किनारे तीर्थ, व्यापार और परिवहन का प्रमुख केंद्र रहा है। इंद्रकीलाद्रि पर कनक दुर्गा मंदिर इसका प्रसिद्ध स्थल है। नदी और आसपास के स्थान तटीय आंध्र के इतिहास से जुड़े हैं।'),cultureText:nm('Vijayawada reflects Telugu cultural life through temple festivals, classical arts, regional cuisine and river-linked traditions. Dasara celebrations at Kanaka Durga Temple are especially prominent.','విజయవాడ తెలుగు జీవనశైలిని ఆలయ ఉత్సవాలు, శాస్త్రీయ కళలు, ప్రాంతీయ వంటకాలు మరియు నది ఆధారిత సంప్రదాయాల ద్వారా ప్రతిబింబిస్తుంది. కనకదుర్గ ఆలయంలో దసరా వేడుకలు ప్రత్యేకంగా ప్రసిద్ధి.','विजयवाड़ा मंदिर उत्सवों, शास्त्रीय कलाओं, क्षेत्रीय व्यंजनों और नदी से जुड़ी परंपराओं के माध्यम से तेलुगु संस्कृति को दर्शाता है। कनक दुर्गा मंदिर का दशहरा विशेष प्रसिद्ध है।')},
+ {id:'tirupati',name:nm('Tirupati','తిరుపతి','तिरुपति'),place:nm('Sri Venkateswara Temple Heritage','శ్రీ వెంకటేశ్వర ఆలయ వారసత్వం','श्री वेंकटेश्वर मंदिर विरासत'),wiki:'Tirumala Venkateswara Temple',history:nm('Tirupati is one of India’s best-known pilgrimage centers because of the Sri Venkateswara Temple on the Tirumala hills. The temple tradition developed over centuries and received patronage from several South Indian dynasties. Its inscriptions, rituals and architecture form a rich historical record.','తిరుమల కొండలపై ఉన్న శ్రీ వెంకటేశ్వర ఆలయం కారణంగా తిరుపతి భారతదేశపు ప్రముఖ యాత్రా కేంద్రాల్లో ఒకటి. ఆలయ సంప్రదాయం శతాబ్దాలుగా అభివృద్ధి చెందింది; అనేక దక్షిణ భారత రాజవంశాల ఆదరణ పొందింది. శాసనాలు, ఆచారాలు, నిర్మాణం గొప్ప చరిత్రను చూపుతాయి.','तिरुमला पहाड़ियों पर स्थित श्री वेंकटेश्वर मंदिर के कारण तिरुपति भारत के प्रमुख तीर्थ केंद्रों में है। मंदिर परंपरा सदियों में विकसित हुई और अनेक दक्षिण भारतीय राजवंशों का संरक्षण मिला। अभिलेख, अनुष्ठान और वास्तुकला समृद्ध इतिहास दर्शाते हैं।'),cultureText:nm('Temple rituals, devotional music, traditional offerings and local Telugu customs shape Tirupati’s cultural identity. The pilgrimage also supports a large community of artisans, cooks, musicians and service traditions.','ఆలయ ఆచారాలు, భక్తి సంగీతం, సంప్రదాయ నైవేద్యాలు మరియు తెలుగు ఆచారాలు తిరుపతి సంస్కృతికి ఆధారం. యాత్రా సంప్రదాయం కళాకారులు, వంటవారు, సంగీతకారులు మరియు సేవా వృత్తుల సముదాయాలకు ఆధారం.','मंदिर अनुष्ठान, भक्ति संगीत, पारंपरिक प्रसाद और तेलुगु रीति-रिवाज तिरुपति की सांस्कृतिक पहचान हैं। तीर्थ परंपरा से कारीगरों, रसोइयों, संगीतकारों और सेवा समुदायों की परंपराएँ भी जुड़ी हैं।')}
+]],
+
+['AR','state',nm('Arunachal Pradesh','అరుణాచల్ ప్రదేశ్','अरुणाचल प्रदेश'),31,40,[['it','Itanagar','ईटానगर']]],
+['AS','state',nm('Assam','అస్సాం','असम'),42,39,[['guwahati','Guwahati','गुवाहाटी'],['sivasagar','Sivasagar','शिवसागर'],['majuli','Majuli','माजुली']]],
+['BR','state',nm('Bihar','బీహార్','बिहार'),48,47,[['patna','Patna','पटना'],['nalanda','Nalanda','नालंदा'],['bodh-gaya','Bodh Gaya','बोधगया']]],
+['CT','state',nm('Chhattisgarh','ఛత్తీస్‌గఢ్','छत्तीसगढ़'),54,62,[['raipur','Raipur','रायपुर'],['sirpur','Sirpur','सिरपुर'],['bastar','Bastar','बस्तर']]],
+['GA','state',nm('Goa','గోవా','गोवा'),37,77,[['panaji','Panaji','पणजी'],['old-goa','Old Goa','ओल्ड गोवा']]],
+['GJ','state',nm('Gujarat','గుజరాత్','गुजरात'),18,58,[['ahmedabad','Ahmedabad','अहमदाबाद'],['vadodara','Vadodara','वडोदरा'],['dwarka','Dwarka','द्वारका']]],
+['HR','state',nm('Haryana','హర్యానా','हरियाणा'),51,34,[['panipat','Panipat','पानीपत'],['kurukshetra','Kurukshetra','कुरुक्षेत्र']]],
+['HP','state',nm('Himachal Pradesh','హిమాచల్ ప్రదేశ్','हिमाचल प्रदेश'),46,27,[['shimla','Shimla','शिमला'],['chamba','Chamba','चंबा']]],
+['JH','state',nm('Jharkhand','జార్ఖండ్','झारखंड'),55,50,[['ranchi','Ranchi','रांची'],['deoghar','Deoghar','देवघर']]],
+['KA','state',nm('Karnataka','కర్ణాటక','कर्नाटक'),36,65,[['hampi','Hampi','हम्पी'],['mysuru','Mysuru','मैसूरु'],['bengaluru','Bengaluru','बेंगलुरु']]],
+['KL','state',nm('Kerala','కేరళ','केरल'),46,78,[['kochi','Kochi','कोच्चि'],['thrissur','Thrissur','त्रिशूर'],['thiruvananthapuram','Thiruvananthapuram','तिरुवनंतपुरम']]],
+['MP','state',nm('Madhya Pradesh','మధ్యప్రదేశ్','मध्य प्रदेश'),48,58,[['khajuraho','Khajuraho','खजुराहो'],['sanchi','Sanchi','सांची'],['bhopal','Bhopal','भोपाल']]],
+['MH','state',nm('Maharashtra','మహారాష్ట్ర','महाराष्ट्र'),31,68,[['mumbai','Mumbai','मुंबई'],['pune','Pune','पुणे'],['ajanta','Ajanta','अजंता']]],
+['MN','state',nm('Manipur','మణిపూర్','मणिपुर'),65,35,[['imphal','Imphal','इंफाल'],['loktak','Loktak Lake','लोकटक झील']]],
+['ML','state',nm('Meghalaya','మేఘాలయ','मेघालय'),61,29,[['shillong','Shillong','शिलांग'],['cherrapunji','Cherrapunji','चेरापूंजी']]],
+['MZ','state',nm('Mizoram','మిజోరం','मिजोरम'),71,41,[['aizawl','Aizawl','आइजोल']]],
+['NL','state',nm('Nagaland','నాగాలాండ్','नागालैंड'),72,27,[['kohima','Kohima','कोहिमा']]],
+['OD','state',nm('Odisha','ఒడిశా','ओडिशा'),60,60,[['konark','Konark','कोणार्क'],['puri','Puri','पुरी'],['bhubaneswar','Bhubaneswar','भुवनेश्वर']]],
+['PB','state',nm('Punjab','పంజాబ్','पंजाब'),30,23,[['amritsar','Amritsar','अमृतसर'],['patiala','Patiala','पटियाला']]],
+['RJ','state',nm('Rajasthan','రాజస్థాన్','राजस्थान'),20,42,[['jaipur','Jaipur','जयपुर'],['jodhpur','Jodhpur','जोधपुर'],['udaipur','Udaipur','उदयपुर']]],
+['SK','state',nm('Sikkim','సిక్కిం','सिक्किम'),65,22,[['gangtok','Gangtok','गंगटोक'],['rumtek','Rumtek','रुमटेक']]],
+['TN','state',nm('Tamil Nadu','తమిళనాడు','तमिलनाडु'),36,84,[['thanjavur','Thanjavur','तंजावुर'],['madurai','Madurai','मदुरै'],['mamallapuram','Mamallapuram','महाबलीपुरम']]],
+['TS','state',nm('Telangana','తెలంగాణ','तेलंगाना'),35,69,[['hyderabad','Hyderabad','हैदराबाद'],['warangal','Warangal','वारंगल']]],
+['TR','state',nm('Tripura','త్రిపుర','त्रिपुरा'),75,38,[['agartala','Agartala','अगरतला'],['unokoti','Unakoti','उनाकोटि']]],
+['UP','state',nm('Uttar Pradesh','ఉత్తరప్రదేశ్','उत्तर प्रदेश'),42,42,[['agra','Agra','आगरा'],['varanasi','Varanasi','वाराणसी'],['lucknow','Lucknow','लखनऊ']]],
+['UK','state',nm('Uttarakhand','ఉత్తరాఖండ్','उत्तराखंड'),48,30,[['haridwar','Haridwar','हरिद्वार'],['rishikesh','Rishikesh','ऋषिकेश']]],
+['WB','state',nm('West Bengal','పశ్చిమ బెంగాల్','पश्चिम बंगाल'),58,57,[['kolkata','Kolkata','कोलकाता'],['bishnupur','Bishnupur','बिष्णुपुर']]],
+['DL','ut',nm('Delhi','ఢిల్లీ','दिल्ली'),43,31,[['red-fort','Red Fort','लाल किला'],['qutub','Qutb Minar','कुतुब मीनार']]],
+['JK','ut',nm('Jammu and Kashmir','జమ్మూ కాశ్మీర్','जम्मू और कश्मीर'),42,17,[['srinagar','Srinagar','श्रीनगर'],['jammu','Jammu','जम्मू']]],
+['LA','ut',nm('Ladakh','లడఖ్','लद्दाख'),36,13,[['leh','Leh','लेह'],['lamayuru','Lamayuru','लामायुरू']]],
+['CH','ut',nm('Chandigarh','చండీగఢ్','चंडीगढ़'),40,28,[['chandigarh','Chandigarh','चंडीगढ़']]],
+['PY','ut',nm('Puducherry','పుదుచ్చేరి','पुडुचेरी'),41,89,[['puducherry','Puducherry','पुडुचेरी']]],
+['AN','ut',nm('Andaman and Nicobar Islands','అండమాన్ నికోబార్ దీవులు','अंडमान और निकोबार द्वीपसमूह'),72,88,[['port-blair','Port Blair','पोर्ट ब्लेयर']]],
+['DN','ut',nm('Dadra and Nagar Haveli and Daman and Diu','దాద్రా మరియు నగర్ హవేలీ మరియు దమన్ మరియు దీవ్','दादरा और नगर हवेली और दमन और दीव'),22,81,[['daman','Daman','दमन'],['silvassa','Silvassa','सिलवासा']]],
+['LD','ut',nm('Lakshadweep','లక్షద్వీప్','लक्षद्वीप'),16,91,[['kavaratti','Kavaratti','कवरत्ती']]]
+];
+
+const coords={
+AP:[25,74],AR:[31,40],AS:[42,39],BR:[48,47],CT:[54,62],GA:[37,77],GJ:[18,58],HR:[51,34],HP:[46,27],JH:[55,50],
+KA:[36,65],KL:[46,78],MP:[48,58],MH:[31,68],MN:[65,35],ML:[61,29],MZ:[71,41],NL:[72,27],OD:[60,60],PB:[30,23],
+RJ:[20,42],SK:[65,22],TN:[36,84],TS:[35,69],TR:[75,38],UP:[42,42],UK:[48,30],WB:[58,57],
+DL:[43,31],JK:[42,17],LA:[36,13],CH:[40,28],PY:[41,89],AN:[72,88],DN:[22,81],LD:[16,91]
+};
+
+function makeCity(region,c,index){
+  let id,nameTe,nameHi,placeText,wiki;
+  if(Array.isArray(c)){
+    id=c[0]; const en=c[1]; nameTe=c[1]; nameHi=c[2];
+    const special={
+      hampi:['Hampi and Vijayanagara','Hampi, Karnataka','Hampi, Karnataka'],
+      mysuru:['Mysuru Palace Heritage','Mysore Palace','Mysore'],
+      bengaluru:['Bengaluru Heritage','Bengaluru','Bangalore'],
+      khajuraho:['Khajuraho Temple Heritage','Khajuraho Group of Monuments','Khajuraho'],
+      sanchi:['Sanchi Buddhist Heritage','Sanchi','Sanchi'],
+      ajanta:['Ajanta Caves Heritage','Ajanta Caves','Ajanta Caves'],
+      konark:['Konark Sun Temple Heritage','Konark Sun Temple','Konark Sun Temple'],
+      'red-fort':['Red Fort Heritage','Red Fort','Red Fort'],
+      qutub:['Qutb Minar Heritage','Qutb Minar','Qutb Minar'],
+      agra:['Taj Mahal Heritage','Taj Mahal','Taj Mahal'],
+      varanasi:['Varanasi Temple and River Heritage','Varanasi','Varanasi'],
+      lucknow:['Lucknow Nawabi Heritage','Lucknow','Lucknow'],
+      thanjavur:['Brihadisvara Temple Heritage','Brihadisvara Temple','Brihadisvara Temple'],
+      madurai:['Madurai Meenakshi Heritage','Meenakshi Amman Temple','Meenakshi Amman Temple'],
+      mamallapuram:['Mamallapuram Shore Temple Heritage','Mahabalipuram Group of Monuments','Mahabalipuram'],
+      hyderabad:['Golconda and Hyderabad Heritage','Golconda Fort','Golconda Fort'],
+      warangal:['Warangal Kakatiya Heritage','Warangal Fort','Warangal Fort'],
+      'old-goa':['Old Goa Christian Heritage','Basilica of Bom Jesus','Basilica of Bom Jesus'],
+      panaji:['Goan Heritage','Panaji','Panaji'],
+      amritsar:['Golden Temple Heritage','Golden Temple','Golden Temple'],
+      jaipur:['Jaipur Fort and Palace Heritage','Amber Fort','Amber Fort'],
+      jodhpur:['Jodhpur Fort Heritage','Mehrangarh Fort','Mehrangarh Fort'],
+      udaipur:['Udaipur Lake Palace Heritage','City Palace, Udaipur','City Palace, Udaipur'],
+      bhubaneswar:['Bhubaneswar Temple Heritage','Lingaraja Temple','Lingaraja Temple'],
+      puri:['Jagannath Temple Heritage','Jagannath Temple, Puri','Jagannath Temple'],
+      patna:['Patna Historical Heritage','Patna Museum','Patna'],
+      nalanda:['Nalanda Mahavihara Heritage','Nalanda mahavihara','Nalanda'],
+      'bodh-gaya':['Bodh Gaya Buddhist Heritage','Mahabodhi Temple','Mahabodhi Temple']
+    };
+    const sp=special[id]; placeText=sp?sp[0]:(en+' Heritage'); wiki=sp?sp[1]:en;
+    name=nm(en,nameTe,nameHi);
+  }else{name= c.name; placeText=c.place; wiki=c.wiki; return {...c,state:region};}
+  const en=name.en;
+  return {
+    id,name,place:nm(placeText,placeText,placeText),wiki,
+    history:nm(`${en} has a distinctive historical story shaped by regional rulers, trade, pilgrimage, architecture or local communities. Its heritage landmarks preserve evidence of how people lived, built, worshipped, exchanged ideas and created art across generations. The selected site is presented here as a focused gateway into the history of ${en}.`,
+      `${name.te}కు ప్రాంతీయ పాలకులు, వాణిజ్యం, యాత్రలు, నిర్మాణం మరియు స్థానిక సమాజాలతో ముడిపడిన ప్రత్యేక చరిత్ర ఉంది. ఇక్కడి వారసత్వ ప్రదేశాలు ప్రజల జీవనం, నిర్మాణకళ, ఆచారాలు, ఆలోచనల మార్పిడి, కళల గురించి ఆధారాలు అందిస్తాయి.`,
+      `${name.hi} का इतिहास क्षेत्रीय शासकों, व्यापार, तीर्थ, वास्तुकला और स्थानीय समुदायों से जुड़ा है। इसके विरासत स्थल जीवन, निर्माण, आस्था, विचारों के आदान-प्रदान और कला की परंपराओं की झलक देते हैं।`),
+    cultureText:nm(`${en} reflects the cultural life of its region through festivals, food, music, crafts, language, religious traditions and everyday community practices. Heritage is kept alive through local knowledge as well as through monuments, museums, performances and celebrations.`,
+      `${name.te} ప్రాంతపు సంస్కృతిని పండుగలు, ఆహారం, సంగీతం, చేతివృత్తులు, భాష, ఆధ్యాత్మిక సంప్రదాయాలు మరియు సామాజిక ఆచారాల ద్వారా ప్రతిబింబిస్తుంది. స్మారకాలు, మ్యూజియంలు, కళా ప్రదర్శనలు మరియు వేడుకలు వారసత్వాన్ని సజీవంగా ఉంచుతాయి.`,
+      `${name.hi} अपने क्षेत्र की संस्कृति को त्योहारों, भोजन, संगीत, शिल्प, भाषा, धार्मिक परंपराओं और सामुदायिक जीवन के माध्यम से दर्शाता है। स्मारक, संग्रहालय, प्रदर्शन और उत्सव इस विरासत को जीवित रखते हैं।`)
+  ,state:region};
+}
+const regions=rawRegions.map(r=>{
+  const [id,type,name,x,y,cities]=r;
+  const normalized=cities.map(c=>makeCity(name,c,0));
+  return {id,type,name,x,y,cities:normalized};
+});
+
+function regionById(id){return regions.find(r=>r.id===id)}
+function cityById(r,id){return r?.cities.find(c=>c.id===id)}
+
+function renderRegionList(){
+  const box=document.getElementById('regionList');box.innerHTML='';
+  regions.forEach(r=>{
+    const b=document.createElement('button');b.className='map-region';
+    b.textContent=(r.type==='ut'?'UT: ':'')+r.name[lang];
+    b.addEventListener('click',()=>selectState(r.id));box.appendChild(b);
+  });
+}
+function renderMapMarkers(){
+  const map=document.getElementById('indiaMap');
+  map.querySelectorAll('.marker').forEach(x=>x.remove());
+  regions.forEach(r=>{
+    const m=document.createElement('button');m.className='marker';m.title=r.name[lang];m.style.left=r.x+'%';m.style.top=r.y+'%';
+    m.innerHTML='<span>'+esc(r.name[lang])+'</span>';m.addEventListener('click',()=>selectState(r.id));map.appendChild(m);
+  });
+}
+function selectState(id){
+  selectedState=regionById(id);selectedCity=null;document.getElementById('cityChooser').classList.remove('hidden');
+  document.getElementById('stateTitle').textContent=selectedState.name[lang];
+  document.getElementById('stateHint').textContent=L[lang].selectCity;
+  const grid=document.getElementById('cityGrid');grid.innerHTML='';
+  selectedState.cities.forEach(c=>{
+    const card=document.createElement('div');card.className='city-card';
+    card.innerHTML='<span class="pill">'+esc(selectedState.type==='ut'?'Union Territory':'State')+'</span><h3>'+esc(c.name[lang])+'</h3><p>'+esc(c.place[lang])+'</p><p><strong>'+esc(L[lang].history)+':</strong> '+esc(c.history[lang].slice(0,155))+'...</p>';
+    card.addEventListener('click',()=>selectCity(selectedState.id,c.id));grid.appendChild(card);
+  });
+  document.getElementById('cityChooser').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function selectCity(stateId,cityId){
+  selectedState=regionById(stateId);selectedCity=cityById(selectedState,cityId);
+  renderCity();showScreen('city');
+}
+function photoFallback(city){
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="550"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#651c2a"/><stop offset="1" stop-color="#d4b064"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><text x="450" y="245" fill="#fff8e5" font-size="44" font-family="Georgia" text-anchor="middle">${esc(city.name.en)}</text><text x="450" y="305" fill="#fff0bd" font-size="26" font-family="Georgia" text-anchor="middle">Chronicles of Bharat</text></svg>`;
+  return 'data:image/svg+xml;charset=UTF-8,'+encodeURIComponent(svg);
+}
+async function loadRealPhoto(city){
+  const img=document.getElementById('placePhoto');img.dataset.real='0';img.src=photoFallback(city);
+  img.onload=()=>{if(selectedCity===city && !current()?.puzzleDone?.[city.id])drawPuzzle();};
+  try{
+    const url='https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(city.wiki);
+    const r=await fetch(url,{headers:{accept:'application/json'}});if(!r.ok)throw new Error('photo');
+    const d=await r.json();const src=d.originalimage?.source||d.thumbnail?.source;
+    if(src){img.src=src;img.dataset.real='1';}
+    document.getElementById('photoCaption').textContent='Real-world photograph: '+city.name.en+' (Wikimedia/Wikipedia source when available).';
+  }catch(e){
+    document.getElementById('photoCaption').textContent='Photo service was unavailable, so a local heritage placeholder is shown. The app still works offline.';
+    drawPuzzle();
+  }
+}
+
+function renderCity(){
+  if(!selectedCity)return;
+  const l=L[lang];document.getElementById('cityTitle').textContent=selectedCity.name[lang];
+  document.getElementById('citySubtitle').textContent=selectedCity.place[lang]+' • '+selectedState.name[lang];
+  document.getElementById('cityContent').classList.remove('hidden');
+  document.getElementById('historyTitle').textContent=l.history;document.getElementById('cultureTitle').textContent=l.culture;
+  document.getElementById('historyText').textContent=selectedCity.history[lang];
+  document.getElementById('cultureText').textContent=selectedCity.cultureText[lang];
+  document.getElementById('puzzleStatus').textContent=(current().puzzleMarks||0)+'/20';
+  loadRealPhoto(selectedCity);initPuzzle();renderQuizIdle();
+}
+
+function makeShuffle(n){const a=Array.from({length:n},(_,i)=>i);do{for(let i=n-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}}while(a.every((v,i)=>v===i));return a}
+function jigsawImageSource(){return document.getElementById('placePhoto').src}
+function initPuzzle(){
+  const p=current();puzzleRun={order:makeShuffle(16),moves:0};
+  if(p?.puzzleDone?.[selectedCity.id]){renderSolvedPuzzle();return}
+  drawPuzzle();
+}
+function drawPuzzle(){
+  const area=document.getElementById('puzzleArea');area.innerHTML='';
+  const board=document.createElement('div');board.className='jigsaw';area.appendChild(board);
+  puzzleRun.order.forEach((piece,slot)=>{
+    const el=document.createElement('div');el.className='piece'+(piece===slot?' correct':'');
+    el.draggable=true;el.dataset.slot=slot;el.dataset.piece=piece;el.dataset.n=piece+1;
+    const row=Math.floor(piece/4),col=piece%4;el.style.backgroundImage=`url("${jigsawImageSource()}")`;el.style.backgroundPosition=`${col*100/3}% ${row*100/3}%`;
+    el.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',slot));
+    el.addEventListener('dragover',e=>e.preventDefault());
+    el.addEventListener('drop',e=>{e.preventDefault();swapPuzzle(Number(e.dataTransfer.getData('text/plain')),slot)});
+    board.appendChild(el);
+  });
+  const row=document.createElement('div');row.className='row space';
+  row.innerHTML=`<span class="pill">16 pieces</span><span class="pill">Moves: ${puzzleRun.moves}</span>`;
+  const controls=document.createElement('div');controls.className='row';controls.innerHTML='<button class="btn gold">Shuffle</button><button class="btn light">Reset</button>';
+  controls.children[0].addEventListener('click',()=>{puzzleRun={order:makeShuffle(16),moves:0};drawPuzzle()});
+  controls.children[1].addEventListener('click',()=>{puzzleRun={order:makeShuffle(16),moves:0};drawPuzzle()});
+  area.appendChild(row);area.appendChild(controls);
+  const hint=document.createElement('p');hint.className='notice';hint.textContent='Drag one piece onto another to swap them. Reconstruct the exact photograph.';area.appendChild(hint);
+}
+function swapPuzzle(a,b){
+  if(a===b)return;[puzzleRun.order[a],puzzleRun.order[b]]=[puzzleRun.order[b],puzzleRun.order[a]];puzzleRun.moves++;
+  if(puzzleRun.order.every((v,i)=>v===i))finishPuzzle();else drawPuzzle();
+}
+function finishPuzzle(){
+  const p=current();p.puzzleDone=p.puzzleDone||{};if(p.puzzleDone[selectedCity.id])return;
+  p.puzzleDone[selectedCity.id]=true;p.puzzleMarks=Math.min(20,(p.puzzleMarks||0)+1);p.xp=(p.xp||0)+15;recalc(p);saveState();toast('Puzzle solved! +1 mark and +15 XP');renderCity();updateDashboard();
+}
+function renderSolvedPuzzle(){
+  const area=document.getElementById('puzzleArea');area.innerHTML='';
+  const img=document.createElement('img');img.className='photo';img.src=jigsawImageSource();img.alt='Solved '+selectedCity.name.en;area.appendChild(img);
+  const n=document.createElement('div');n.className='notice';n.innerHTML='<strong>🎉 Puzzle Solved!</strong> This city puzzle is complete and cannot award the mark again.';
+  area.appendChild(n);
+}
+
+function uniqueOptions(correct,others){
+  const arr=[correct,...others.filter(x=>x!==correct)];
+  const out=[];arr.forEach(x=>{if(!out.includes(x)&&out.length<4)out.push(x)});
+  let fallback=['India','Heritage','History','Culture','Learning','Art'];
+  for(const x of fallback){if(out.length>=4)break;if(!out.includes(x))out.push(x)}
+  return out;
+}
+function questionSet(city){
+  const st=selectedState.name, n=city.name;
+  const q1=uniqueOptions(n.en,[st.en,'New Delhi','Mumbai']);
+  const q2=uniqueOptions(st.en,['Kerala','Gujarat','Punjab']);
+  return [
+   {q:{en:`Which place is selected in this round?`,te:`ఈ రౌండ్‌లో ఎంచుకున్న ప్రదేశం ఏది?`,hi:`इस राउंड में चुना गया स्थान कौन सा है?`},a:q1,c:0},
+   {q:{en:`Which State or Union Territory contains ${n.en}?`,te:`${n.te} ఏ రాష్ట్రం లేదా కేంద్ర పాలిత ప్రాంతంలో ఉంది?`,hi:`${n.hi} किस राज्य या केंद्र शासित प्रदेश में है?`},a:q2,c:0},
+   {q:{en:`What kind of learning focus is used for ${n.en} in this quest?`,te:`${n.te} కోసం ఈ క్వెస్ట్‌లో ప్రధానంగా ఏమి నేర్చుకుంటాం?`,hi:`${n.hi} के लिए इस क्वेस्ट में मुख्य सीखने का केंद्र क्या है?`},a:['Local history and culture','Space science','Ocean engineering','Modern banking'],c:0},
+   {q:{en:`The selected place is presented through which heritage themes?`,te:`ఎంచుకున్న ప్రదేశాన్ని ఏ వారసత్వ అంశాల ద్వారా చూపిస్తున్నారు?`,hi:`चयनित स्थान को किन विरासत विषयों के माध्यम से दिखाया गया है?`},a:['History and culture','Only sports','Only mathematics','Only weather'],c:0},
+   {q:{en:`Which activity uses a 4×4 arrangement of 16 pieces?`,te:`16 ముక్కల 4×4 అమరికను ఉపయోగించే కార్యకలాపం ఏది?`,hi:`16 टुकड़ों वाली 4×4 व्यवस्था किस गतिविधि में है?`},a:['Picture puzzle','Memory pairs','Leaderboard','Login'],c:0},
+   {q:{en:`How many questions are in the selected-place quiz?`,te:`ఎంచుకున్న ప్రదేశపు క్విజ్‌లో ఎన్ని ప్రశ్నలు ఉన్నాయి?`,hi:`चयनित स्थान की क्विज़ में कितने प्रश्न हैं?`},a:['10','5','15','20'],c:0},
+   {q:{en:`How many marks is each quiz question worth?`,te:`ప్రతి క్విజ్ ప్రశ్నకు ఎన్ని మార్కులు?`,hi:`हर क्विज़ प्रश्न कितने अंकों का है?`},a:['2','1','5','10'],c:0},
+   {q:{en:`What is the maximum score for this city quiz?`,te:`ఈ నగర క్విజ్ గరిష్ట స్కోరు ఎంత?`,hi:`इस शहर की क्विज़ का अधिकतम स्कोर कितना है?`},a:['20','10','25','50'],c:0},
+   {q:{en:`Which section gives the selected place a history and culture story?`,te:`ఎంచుకున్న ప్రదేశానికి చరిత్ర మరియు సంస్కృతి కథలు ఎక్కడ కనిపిస్తాయి?`,hi:`चयनित स्थान का इतिहास और संस्कृति कहाँ दिखाई जाती है?`},a:['Selected Place page','Only Leaderboard','Login only','Music controls'],c:0},
+   {q:{en:`What is the overall maximum marks in the quest?`,te:`మొత్తం క్వెస్ట్ గరిష్ట మార్కులు ఎంత?`,hi:`पूरे क्वेस्ट के अधिकतम अंक कितने हैं?`},a:['50','40','48','100'],c:0}
+  ];
+}
+function renderQuizIdle(){
+  const area=document.getElementById('quizArea');const hist=current()?.quizHistory?.[selectedCity.id];
+  if(hist){area.innerHTML=`<div class="notice">Previous quiz result for <strong>${esc(selectedCity.name[lang])}</strong>: <strong>${hist.score}/20</strong>. You can restart the quiz.</div>`}
+  else area.innerHTML='<div class="notice">Click <strong>Start / Restart Quiz</strong> to begin exactly 10 questions for this selected place.</div>';
+}
+function startSelectedQuiz(){
+  quizState={index:0,score:0,answered:false,active:true,answers:[]};renderQuiz();
+}
+function renderQuiz(){
+  const qs=questionSet(selectedCity),area=document.getElementById('quizArea');
+  if(quizState.index>=qs.length){finishQuiz();return}
+  const q=qs[quizState.index],pct=(quizState.index/10)*100;area.innerHTML=`<div class="quiz-card">
+    <div class="row space"><strong style="color:var(--maroon)">Question ${quizState.index+1} of 10</strong><span class="pill">Score: ${quizState.score}/20</span></div>
+    <div class="progress" style="margin:12px 0 16px"><span style="width:${pct}%"></span></div>
+    <div style="font-size:1.35rem;line-height:1.5;font-weight:700">${esc(q.q[lang])}</div>
+    <div id="opts"></div><div id="qFeedback" style="min-height:26px;font-weight:700;margin-top:10px"></div>
+    <button id="nextQ" class="btn" disabled>Next →</button>
+  </div>`;
+  const opts=document.getElementById('opts');
+  q.a.forEach((x,i)=>{const b=document.createElement('button');b.className='option';b.textContent=x;b.addEventListener('click',()=>answerQuestion(i));opts.appendChild(b)});
+}
+function answerQuestion(i){
+  if(quizState.answered)return;quizState.answered=true;
+  const qs=questionSet(selectedCity),q=qs[quizState.index],buttons=[...document.querySelectorAll('#opts .option')];
+  buttons.forEach(b=>b.disabled=true);
+  if(i===q.c){quizState.score+=2;buttons[i].classList.add('correct');document.getElementById('qFeedback').textContent='Correct! +2 marks';document.getElementById('qFeedback').style.color='var(--green)'}
+  else{buttons[i].classList.add('wrong');buttons[q.c].classList.add('correct');document.getElementById('qFeedback').textContent='The correct answer is highlighted.'}
+  quizState.answers[quizState.index]=i;
+  document.querySelector('#nextQ').disabled=false;
+}
+function finishQuiz(){
+  const p=current();p.quizMarks=quizState.score;p.quizHistory=p.quizHistory||{};p.quizHistory[selectedCity.id]={score:quizState.score,run:Date.now()};p.xp=(p.xp||0)+quizState.score;recalc(p);saveState();updateDashboard();
+  document.getElementById('quizArea').innerHTML=`<div class="notice"><strong>Quiz Complete!</strong><br>Selected place: ${esc(selectedCity.name[lang])}<br><strong>Score: ${quizState.score}/20</strong><br>Each question was worth 2 marks.</div>`;
+}
+
+document.getElementById('startQuiz').addEventListener('click',startSelectedQuiz);
+
+const memoryItems=[['Hampi','🏛️'],['Taj Mahal','🕌'],['Diwali','🪔'],['Konark','☀️'],['Kuchipudi','💃'],['Nalanda','📚'],['Chaturanga','♟️'],['Bharatanatyam','🎭']];
+function initMemory(){
+  const deck=[];memoryItems.forEach((x,i)=>{deck.push({id:i,name:x[0],icon:x[1],matched:false});deck.push({id:i,name:x[0],icon:x[1],matched:false})});
+  deck.sort(()=>Math.random()-.5);memoryState={cards:deck,first:null,second:null,lock:false,matches:0,attempts:0};renderMemory();
+}
+function renderMemory(){
+  const p=current();document.getElementById('matchCount').textContent=memoryState.matches+'/8';document.getElementById('attempts').textContent=memoryState.attempts;
+  document.getElementById('gameMarks').textContent=(p?.heritageGameMarks||0)+'/10';document.getElementById('gameXP').textContent=p?.xp||0;
+  const board=document.getElementById('memoryBoard');board.innerHTML='';
+  memoryState.cards.forEach((c,i)=>{const b=document.createElement('button');b.className='mem'+(c.matched?' matched':'')+((i===memoryState.first||i===memoryState.second)?' flipped':'');b.disabled=c.matched||memoryState.lock;
+    b.innerHTML='<div class="mem-inner"><div class="face front">✦</div><div class="face back">'+c.icon+'<br><small>'+esc(c.name)+'</small></div></div>';b.addEventListener('click',()=>flipMemory(i));board.appendChild(b)});
+}
+function flipMemory(i){
+  if(memoryState.lock||memoryState.cards[i].matched||memoryState.first===i)return;
+  if(memoryState.first===null){memoryState.first=i;renderMemory();return}
+  memoryState.second=i;memoryState.lock=true;memoryState.attempts++;renderMemory();
+  const a=memoryState.cards[memoryState.first],b=memoryState.cards[memoryState.second];
+  setTimeout(()=>{
+    if(a.id===b.id){a.matched=b.matched=true;memoryState.matches++;toast('Match found!')}
+    else toast('Try another pair.');
+    memoryState.first=memoryState.second=null;memoryState.lock=false;renderMemory();
+    if(memoryState.matches===8)finishMemory();
+  },650)
+}
+function finishMemory(){
+  const p=current();if(p.gameCompleted)return;
+  p.gameCompleted=true;p.heritageGameMarks=10;p.xp=(p.xp||0)+50;recalc(p);saveState();updateDashboard();renderMemory();toast('Heritage Game complete! You earned 10/10 marks.');
+}
+
+function updateDashboard(){
+  const p=current();if(!p)return;recalc(p);saveState();
+  document.getElementById('welcome').textContent='Welcome, '+p.name+'!';
+  document.getElementById('dashQuiz').textContent=p.quizMarks+'/20';document.getElementById('dashPuzzle').textContent=p.puzzleMarks+'/20';
+  document.getElementById('dashGame').textContent=p.heritageGameMarks+'/10';document.getElementById('dashTotal').textContent=p.totalMarks+'/50';
+  document.getElementById('dashXP').textContent=p.xp||0;const arr=allParticipants();const rank=arr.findIndex(x=>slug(x.name)===slug(p.name))+1;document.getElementById('dashRank').textContent=rank||'—';
+}
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('active',s.id===id));
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===id));
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='home')updateDashboard();if(id==='explore'){renderRegionList();renderMapMarkers()}
+  if(id==='city'&&selectedCity)renderCity();if(id==='game')renderMemory();if(id==='marks')renderMarks();if(id==='leaderboard')renderLeaderboard()
+}
+function renderMarks(){
+  const q=document.getElementById('marksSearch').value.toLowerCase(),body=document.getElementById('marksBody');body.innerHTML='';
+  allParticipants().filter(p=>p.name.toLowerCase().includes(q)).forEach(p=>{const tr=document.createElement('tr');tr.innerHTML=`<td style="text-align:left"><strong>${esc(p.name)}</strong></td><td>${p.quizMarks}</td><td>${p.puzzleMarks}</td><td>${p.heritageGameMarks}</td><td><strong>${p.totalMarks}</strong></td>`;body.appendChild(tr)})
+}
+function renderLeaderboard(){
+  const rows=allParticipants();let h='<table class="table"><thead><tr><th>Rank</th><th>Participant</th><th>Quiz</th><th>Puzzle</th><th>Game</th><th>Total /50</th></tr></thead><tbody>';
+  rows.forEach((p,i)=>{const cur=appState.currentName&&slug(p.name)===slug(appState.currentName);h+=`<tr${cur?' style="background:#f3e6bb"':''}><td>${i+1}</td><td>${esc(p.name)}${cur?' ⭐':''}</td><td>${p.quizMarks}</td><td>${p.puzzleMarks}</td><td>${p.heritageGameMarks}</td><td><strong>${p.totalMarks}</strong></td></tr>`});
+  h+='</tbody></table>';document.getElementById('leaderboardBody').innerHTML=rows.length?h:'<div style="padding:18px">No participants yet.</div>';
+}
+document.getElementById('marksSearch').addEventListener('input',renderMarks);
+document.getElementById('resetMarks').addEventListener('click',()=>{if(!confirm('Reset marks and progress for all participants? Names will remain.'))return;Object.values(appState.participants).forEach(p=>{p.quizMarks=0;p.puzzleMarks=0;p.heritageGameMarks=0;p.totalMarks=0;p.xp=0;p.puzzleDone={};p.quizHistory={};p.gameCompleted=false});saveState();renderMarks();renderLeaderboard();updateDashboard();toast('All marks and progress have been reset.')});
+document.getElementById('backMap').addEventListener('click',()=>{selectedState=null;selectedCity=null;document.getElementById('cityChooser').classList.add('hidden')});
+
+let audioCtx=null,gain=null,musicOn=false,musicTimer=null;
+const notes=[261.63,329.63,392,523.25,392,329.63,293.66,392];
+function startMusic(){try{if(!audioCtx){audioCtx=new (window.AudioContext||window.webkitAudioContext)();gain=audioCtx.createGain();gain.gain.value=Number(document.getElementById('volume').value);gain.connect(audioCtx.destination)}if(audioCtx.state==='suspended')audioCtx.resume();musicOn=true;playLoop();document.getElementById('musicBtn').textContent='❚❚ Music'}catch(e){}}
+function playLoop(){if(!musicOn)return;const now=audioCtx.currentTime;notes.forEach((f,i)=>{const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(.0001,now+i*.28);g.gain.exponentialRampToValueAtTime(.07,now+i*.28+.03);g.gain.exponentialRampToValueAtTime(.0001,now+i*.28+.23);o.connect(g);g.connect(gain);o.start(now+i*.28);o.stop(now+i*.28+.24)});musicTimer=setTimeout(playLoop,notes.length*280)}
+function stopMusic(){musicOn=false;clearTimeout(musicTimer);musicTimer=null;document.getElementById('musicBtn').textContent='▶ Music'}
+document.getElementById('musicBtn').addEventListener('click',()=>musicOn?stopMusic():startMusic());
+document.getElementById('volume').addEventListener('input',()=>{try{if(!gain)startMusic();if(gain)gain.gain.value=Number(document.getElementById('volume').value)}catch(e){}});
+
+function applyLanguage(){
+  renderRegionList();renderMapMarkers();
+  document.querySelector('[data-screen="home"]').textContent=L[lang].home;
+  document.querySelector('[data-screen="explore"]').textContent=L[lang].explore;
+  document.querySelector('[data-screen="city"]').textContent=L[lang].city;
+  document.querySelector('[data-screen="game"]').textContent=L[lang].game;
+  document.querySelector('[data-screen="marks"]').textContent=L[lang].marks;
+  document.querySelector('[data-screen="leaderboard"]').textContent=L[lang].leaderboard;
+  document.getElementById('langBtn').textContent=lang==='en'?'తెలుగు':lang==='te'?'हिन्दी':'English';
+  if(selectedState)selectState(selectedState.id);
+  if(selectedCity)renderCity();
+  renderMarks();renderLeaderboard();updateDashboard();
+}
+document.querySelectorAll('.langChoice').forEach(b=>b.addEventListener('click',()=>{lang=b.dataset.lang;applyLanguage()}));
+document.getElementById('langBtn').addEventListener('click',()=>{lang=lang==='en'?'te':lang==='te'?'hi':'en';applyLanguage()});
+
+document.querySelectorAll('#nav button,[data-go]').forEach(b=>b.addEventListener('click',()=>showScreen(b.dataset.screen||b.dataset.go)));
+document.getElementById('logoutBtn').addEventListener('click',()=>{stopMusic();appState.currentName='';saveState();selectedState=null;selectedCity=null;document.getElementById('app').classList.add('hidden');document.getElementById('loginScreen').classList.remove('hidden');document.getElementById('loginName').value='';document.getElementById('loginName').focus()});
+document.getElementById('restartMemory').addEventListener('click',initMemory);
+
+function enterQuest(){
+  const name=normName(document.getElementById('loginName').value);
+  if(!name){alert('Please enter your participant name.');return}
+  const key=ensureParticipant(name);appState.currentName=appState.participants[key].name;saveState();
+  document.getElementById('loginScreen').classList.add('hidden');document.getElementById('app').classList.remove('hidden');
+  updateDashboard();initMemory();showScreen('home');
+  try{startMusic()}catch(e){}toast('Welcome to the Heritage Quest, '+appState.currentName+'!');
+}
+document.getElementById('loginEnter').addEventListener('click',enterQuest);
+document.getElementById('loginName').addEventListener('keydown',e=>{if(e.key==='Enter')enterQuest()});
+
+renderRegionList();renderMapMarkers();document.getElementById('loginName').focus();
+</script>
+</body>
+</html>
